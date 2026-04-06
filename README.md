@@ -6,7 +6,7 @@
 
 **存储、管理和一键自动填充 AI 对话提示词的 Chrome 浏览器扩展**
 
-[![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-4285F4?style=flat-square&logo=googlechrome&logoColor=white)](https://github.com/your-username/PromptPilot)
+[![Chrome Extension](https://img.shields.io/badge/Chrome-Extension-4285F4?style=flat-square&logo=googlechrome&logoColor=white)](https://github.com/maxiaobang7/PromptPilot)
 [![Manifest V3](https://img.shields.io/badge/Manifest-V3-34A853?style=flat-square)](https://developer.chrome.com/docs/extensions/develop/migrate/what-is-mv3)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue?style=flat-square)](LICENSE)
 [![Version](https://img.shields.io/badge/Version-1.3.0-orange?style=flat-square)](manifest.json)
@@ -56,7 +56,7 @@
 1. **下载项目**
 
    ```bash
-   git clone https://github.com/your-username/PromptPilot.git
+   git clone https://github.com/maxiaobang7/PromptPilot.git
    ```
 
 2. **打开 Chrome 扩展管理页面**
@@ -185,8 +185,8 @@ PromptPilot/
 ## 🔗 相关链接
 
 - 🌐 [图钉AI导航](https://www.tudingai.com/) — 发现更多优质 AI 工具
-- 🐛 [提交 Bug](https://github.com/your-username/PromptPilot/issues)
-- 💬 [讨论区](https://github.com/your-username/PromptPilot/discussions)
+- 🐛 [提交 Bug](https://github.com/maxiaobang7/PromptPilot/issues)
+- 💬 [讨论区](https://github.com/maxiaobang7/PromptPilot/discussions)
 
 ---
 
