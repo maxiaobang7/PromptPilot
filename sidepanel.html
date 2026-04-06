@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PromptPilot - 图钉AI 提示词管理器</title>
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-logo">
+        <svg class="logo-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+        <h1 class="header-title">PromptPilot</h1>
+      </div>
+      <div class="site-badge" id="siteBadge">
+        <span class="badge-dot"></span>
+        <span class="badge-text" id="siteNameText">检测中...</span>
+      </div>
+    </header>
+
+    <!-- Search & Controls -->
+    <div class="toolbar">
+      <div class="search-box">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
+        </svg>
+        <input type="text" id="searchInput" placeholder="搜索提示词..." autocomplete="off">
+      </div>
+      <button class="btn-icon btn-add" id="btnAdd" title="新建提示词">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+        </svg>
+      </button>
+      <button class="btn-icon btn-import" id="btnImportExport" title="导入/导出">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Category Tabs -->
+    <div class="categories" id="categoryTabs">
+      <button class="cat-tab active" data-cat="all">全部</button>
+    </div>
+
+    <!-- Prompt List -->
+    <div class="prompt-list" id="promptList">
+      <div class="empty-state" id="emptyState">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="empty-icon">
+          <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
+        </svg>
+        <p>还没有提示词</p>
+        <span>点击 <strong>+</strong> 创建你的第一条提示词</span>
+      </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="bottom-bar">
+      <a class="promo-link" href="https://www.tudingai.com/" target="_blank" rel="noopener noreferrer">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="promo-icon">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+          <path d="M2 17l10 5 10-5"/>
+          <path d="M2 12l10 5 10-5"/>
+        </svg>
+        <span>@图钉AI导航</span>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="promo-arrow">
+          <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>
+        </svg>
+      </a>
+      <label class="toggle-row">
+        <span class="toggle-label">自动发送</span>
+        <div class="toggle-switch">
+          <input type="checkbox" id="autoSendToggle">
+          <span class="toggle-slider"></span>
+        </div>
+      </label>
+    </div>
+  </div>
+
+  <!-- Modal: Edit/Create Prompt -->
+  <div class="modal-overlay" id="editModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="modalTitle">新建提示词</h2>
+        <button class="btn-close" id="btnCloseModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>标题</label>
+          <input type="text" id="editName" placeholder="例：代码审查专家">
+        </div>
+        <div class="form-group">
+          <label>分类</label>
+          <div class="category-input-row">
+            <input type="text" id="editCategory" placeholder="例：编程、翻译、写作" list="categoryList">
+            <datalist id="categoryList"></datalist>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>
+            提示词内容
+            <span class="hint">用 <code>{{变量名}}</code> 标记变量</span>
+          </label>
+          <!-- Variable Quick Insert Toolbar -->
+          <div class="var-insert-toolbar" id="varInsertToolbar">
+            <button class="var-insert-btn" id="btnWrapVar" title="将选中文字转为变量，或在光标处插入新变量" disabled>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px">
+                <path d="M7 8l-4 4 4 4"/><path d="M17 8l4 4-4 4"/>
+              </svg>
+              <span id="wrapVarLabel">插入变量</span>
+            </button>
+            <div class="var-insert-input-group" id="varNameGroup" style="display:none">
+              <input type="text" id="varNameInput" placeholder="输入变量名" autocomplete="off">
+              <button class="var-confirm-btn" id="btnConfirmVar" title="确认">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </button>
+              <button class="var-cancel-btn" id="btnCancelInsertVar" title="取消">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="width:14px;height:14px">
+                  <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <textarea id="editContent" rows="8" placeholder="例：请帮我审查以下 {{语言}} 代码，关注 {{审查重点}} 方面的问题：&#10;&#10;{{代码内容}}"></textarea>
+          <div class="detected-vars" id="detectedVars"></div>
+        </div>
+        <div class="form-group" id="defaultVarsGroup" style="display:none">
+          <label>变量默认值</label>
+          <div id="defaultVarsContainer"></div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btnCancelEdit">取消</button>
+        <button class="btn btn-danger" id="btnDeletePrompt" style="display:none">删除</button>
+        <button class="btn btn-primary" id="btnSavePrompt">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Variable Fill -->
+  <div class="modal-overlay" id="varModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 id="varModalTitle">填写变量</h2>
+        <button class="btn-close" id="btnCloseVarModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="preview-label">预览</div>
+        <div class="preview-box" id="varPreview"></div>
+        <div id="varFieldsContainer"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btnCancelVar">取消</button>
+        <button class="btn btn-primary" id="btnFillPrompt">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;margin-right:4px">
+            <polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+          </svg>
+          填充
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Import/Export -->
+  <div class="modal-overlay" id="ioModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>导入 / 导出</h2>
+        <button class="btn-close" id="btnCloseIOModal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="io-actions">
+          <button class="btn btn-primary btn-block" id="btnExport">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;margin-right:6px">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+            </svg>
+            导出全部提示词 (JSON)
+          </button>
+          <div class="io-divider"><span>或</span></div>
+          <label class="btn btn-secondary btn-block" id="btnImportLabel">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;margin-right:6px">
+              <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+            导入提示词 (JSON)
+            <input type="file" id="fileImport" accept=".json" style="display:none">
+          </label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" id="btnCloseIO">关闭</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast"></div>
+
+  <script src="sidepanel.js"></script>
+</body>
+</html>
