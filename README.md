@@ -43,11 +43,11 @@
 
 > 💡 安装扩展后截图，放入 `screenshots/` 文件夹，然后取消下方注释即可显示
 
-<!--
+
 | 侧边面板主界面 | 变量模板填写 | 提示词编辑 |
 |:---:|:---:|:---:|
-| ![主界面](screenshots/main.png) | ![变量填写](screenshots/variables.png) | ![编辑](screenshots/edit.png) |
--->
+| ![主界面](screenshots/main.webp) | ![变量填写](screenshots/variables.webp) | ![编辑](screenshots/edit.webp) |
+
 
 ## 📥 安装方法
 
